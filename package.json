@@ -4,7 +4,8 @@
   "description": "deploy-static-action",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "pub": "ncc build index.js -o dist"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
   "dependencies": {
     "@actions/core": "^1.1.1",
     "@actions/github": "^1.1.0"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.20.5"
   }
 }
