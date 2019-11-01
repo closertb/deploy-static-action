@@ -1,0 +1,20 @@
+{
+  "name": "deploy-static-action",
+  "version": "1.0.0",
+  "description": "deploy-static-action",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/closertb/deploy-static-action/issues"
+  },
+  "homepage": "https://github.com/closertb/deploy-static-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.1.1",
+    "@actions/github": "^1.1.0"
+  }
+}
