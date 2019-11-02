@@ -4439,8 +4439,8 @@ const request = __webpack_require__(830);
 const core = __webpack_require__(470);
 
 function sendData(url, formData) {
-  request.post({ url, formData }, function (error, response = {}) {  
-    console.log('type', response);
+  request.post({ url, formData }, function (error, response = {}, body) {  
+    console.log('mesage', body);
     if (!error && response.statusCode < 300) {
       console.log('send file successfully');
       return;
