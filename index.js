@@ -6,7 +6,7 @@ const core = require('@actions/core');
 
 function sendData(url, formData) {
   request.post({ url, formData }, function (error, response = {}) {  
-    console.log('type', typeof response.statusCode);
+    console.log('type', response);
     if (!error && response.statusCode < 300) {
       console.log('send file successfully');
       return;
