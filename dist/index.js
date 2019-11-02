@@ -4509,7 +4509,7 @@ try {
   out.on('close', () => {
     formData.file = fs.createReadStream(zipPath);
     console.log('get success');
-    // sendData(requestUrl, formData);
+    sendData(requestUrl, formData);
   });
   archive.pipe(out);
   // some wrong info
