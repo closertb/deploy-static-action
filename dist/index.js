@@ -4440,7 +4440,8 @@ const core = __webpack_require__(470);
 
 function sendData(url, formData) {
   request.post({ url, formData }, function (error, response) {  
-    if (!error && response.statusCode && response.statusCode.startWith('20')) {
+    console.log('type', typeof response.statusCode);
+    if (!error && response.statusCode && ('' + response.statusCode).startWith('20')) {
       console.log('send file successfully');
       return;
     }
@@ -4513,7 +4514,7 @@ try {
   });
   archive.pipe(out);
   // some wrong info
-  console.log('message', message);
+  // console.log('message', message);
 } catch (error) {
   core.setFailed(error.message);
 }
