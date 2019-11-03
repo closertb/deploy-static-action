@@ -4500,17 +4500,14 @@ try {
   });
   const zipPath = path.join(dist, `/${target}.zip`);
   const out = fs.createWriteStream(zipPath);
-
-  addFileToZip(archive, dist, true);
-
   out.on('close', () => {
     formData.file = fs.createReadStream(zipPath);
     console.log('start send zip files');
     sendData(requestUrl, formData);
   });
   archive.pipe(out);
-  // some wrong info
-  // console.log('message', message);
+  // add file to zip
+  addFileToZip(archive, dist, true);
 } catch (error) {
   core.setFailed(error.message);
 }
