@@ -4445,7 +4445,7 @@ function sendData(url, formData) {
       console.log('send file successfully');
       return;
     }
-    console.error('send failed');
+    console.error('send file failed');
   });
 }
 
@@ -4462,7 +4462,6 @@ function addFileToZip(archive, dirPath, finish = false, dir) {
         isEnd = false;
         addFileToZip(archive, filePath, true, file.name);
       } else {
-        console.log('name:', file.name);
         if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif]+$/.test(file.name)) {
           const buf = fs.createReadStream(filePath);
           archive.append(buf, {
@@ -4472,7 +4471,6 @@ function addFileToZip(archive, dirPath, finish = false, dir) {
       }
     });
     // pipe archive data to the file
-    console.log('finish', isEnd);
     isEnd && archive.finalize();
   });
 }
@@ -4501,15 +4499,13 @@ try {
     zlib: { level: 9 } // Sets the compression level.
   });
   const zipPath = path.join(dist, `/${target}.zip`);
-  console.log('zip:', zipPath, formData, time);
-
   const out = fs.createWriteStream(zipPath);
 
   addFileToZip(archive, dist, true);
 
   out.on('close', () => {
     formData.file = fs.createReadStream(zipPath);
-    console.log('get success');
+    console.log('start send zip files');
     sendData(requestUrl, formData);
   });
   archive.pipe(out);
