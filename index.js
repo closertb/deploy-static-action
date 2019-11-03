@@ -4,6 +4,15 @@ const archiver = require('archiver');
 const request = require('request');
 const core = require('@actions/core');
 
+// const core = {
+//   getInput() {
+
+//   },
+//   setsetFailed(msg) {
+//     console.log('message:', msg);
+//   }
+// };
+
 function sendData(url, formData) {
   request.post({ url, formData }, function (error, response = {}, body) {  
     console.log('mesage', body);
@@ -17,8 +26,7 @@ function sendData(url, formData) {
 
 let endFlag = 1; // 遍历完成标志
 
-// 只支持一级子目录
-function addFileToZip(archive, dirPath, dir) {
+function addFileToZip(archive, dirPath, root = '') {
   fs.readdir(dirPath, {
     withFileTypes: true
   }, (err, files) => {
@@ -27,12 +35,12 @@ function addFileToZip(archive, dirPath, dir) {
       const filePath = path.join(dirPath, file.name);
       if (file.isDirectory()) {
         endFlag +=1;
-        addFileToZip(archive, filePath, file.name);
+        addFileToZip(archive, filePath, path.join(root, file.name));
       } else {
         if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif|ico]+$/.test(file.name)) {
           const buf = fs.createReadStream(filePath);
           archive.append(buf, {
-            name: dir ? `${dir}/${file.name}` : file.name
+            name: path.join(root, file.name)
           });
         }
       }
@@ -46,7 +54,7 @@ function addFileToZip(archive, dirPath, dir) {
 try {
   // `who-to-greet` input defined in action metadata file
   const name = core.getInput('name'); //  || 'dom'
-  const token = core.getInput('token'); //  || 'dom.0909'
+  const token = core.getInput('token'); //  || 'dom'
   const requestUrl = core.getInput('requestUrl');
   const dist = core.getInput('dist') || 'dist'; 
   const target = core.getInput('target') || 'dist'; 

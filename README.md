@@ -7,5 +7,5 @@
  - requestUrl：一个部署API
 
  ##  
- 当前只支持了一级子目录的打包，且会对文件属性进行过滤，特殊格式的还不支持；
+ 当前会对文件属性进行过滤，特殊格式的还不支持；
  >[txt|js|css|md|html|jpg|png|jpeg|gif|ico]
