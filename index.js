@@ -24,6 +24,7 @@ function addFileToZip(archive, dirPath, finish = false, dir) {
     // console.log('s', files);
     files.forEach(file => {
       const filePath = path.join(dirPath, file.name);
+      console.log('name:', file.name, isEnd);
       if (file.isDirectory()) {
         isEnd = false;
         addFileToZip(archive, filePath, true, file.name);
@@ -37,6 +38,7 @@ function addFileToZip(archive, dirPath, finish = false, dir) {
       }
     });
     // pipe archive data to the file
+    console.log('name:', files, isEnd);
     isEnd && archive.finalize();
   });
 }
