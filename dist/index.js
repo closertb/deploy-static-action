@@ -4462,7 +4462,7 @@ function addFileToZip(archive, dirPath, finish = false, dir) {
         isEnd = false;
         addFileToZip(archive, filePath, true, file.name);
       } else {
-        if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif]+$/.test(file.name)) {
+        if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif|ico]+$/.test(file.name)) {
           const buf = fs.createReadStream(filePath);
           archive.append(buf, {
             name: dir ? `${dir}/${file.name}` : file.name
