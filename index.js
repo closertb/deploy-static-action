@@ -15,19 +15,19 @@ function sendData(url, formData) {
   });
 }
 
+let endFlag = 1; // 遍历完成标志
+
 // 只支持一级子目录
-function addFileToZip(archive, dirPath, finish = false, dir) {
-  let isEnd = finish;
+function addFileToZip(archive, dirPath, dir) {
   fs.readdir(dirPath, {
     withFileTypes: true
   }, (err, files) => {
-    // console.log('s', files);
+    endFlag -= 1; // 遍历一次目录减1
     files.forEach(file => {
       const filePath = path.join(dirPath, file.name);
-      console.log('name:', file.name, isEnd);
       if (file.isDirectory()) {
-        isEnd = false;
-        addFileToZip(archive, filePath, true, file.name);
+        endFlag +=1;
+        addFileToZip(archive, filePath, file.name);
       } else {
         if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif|ico]+$/.test(file.name)) {
           const buf = fs.createReadStream(filePath);
@@ -38,8 +38,8 @@ function addFileToZip(archive, dirPath, finish = false, dir) {
       }
     });
     // pipe archive data to the file
-    console.log('name:', files, isEnd);
-    isEnd && archive.finalize();
+    console.log('close:', endFlag);
+    (endFlag === 0) && archive.finalize();
   });
 }
 
@@ -50,7 +50,6 @@ try {
   const requestUrl = core.getInput('requestUrl');
   const dist = core.getInput('dist') || 'dist'; 
   const target = core.getInput('target') || 'dist'; 
-  const time = (new Date()).toTimeString();
 
   if (!name || !token) {
     console.error('name and token is nessary');
@@ -75,7 +74,7 @@ try {
   });
   archive.pipe(out);
   // add file to zip
-  addFileToZip(archive, dist, true);
+  addFileToZip(archive, dist);
 } catch (error) {
   core.setFailed(error.message);
 }
