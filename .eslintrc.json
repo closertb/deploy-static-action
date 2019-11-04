@@ -1,0 +1,10 @@
+{
+    "extends": ["@doddle/eslint-config-doddle"],
+    "parserOptions": {
+    },
+    "rules": {
+        "max-len": ["error", { "code": 150 }],
+        "arrow-body-style": ["error", "as-needed"],
+        "lines-between-class-members": "off"
+    }
+}

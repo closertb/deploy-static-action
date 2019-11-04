@@ -4435,55 +4435,9 @@ exports.default = crc32;
 const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
 const archiver = __webpack_require__(248);
-const request = __webpack_require__(830);
 const core = __webpack_require__(470);
-
-// const core = {
-//   getInput() {
-
-//   },
-//   setsetFailed(msg) {
-//     console.log('message:', msg);
-//   }
-// };
-
-function sendData(url, formData) {
-  request.post({ url, formData }, function (error, response = {}, body) {  
-    console.log('mesage', body);
-    if (!error && response.statusCode < 300) {
-      console.log('send file successfully');
-      return;
-    }
-    console.error('send file failed');
-  });
-}
-
-let endFlag = 1; // 遍历完成标志
-
-function addFileToZip(archive, dirPath, root = '') {
-  fs.readdir(dirPath, {
-    withFileTypes: true
-  }, (err, files) => {
-    endFlag -= 1; // 遍历一次目录减1
-    files.forEach(file => {
-      const filePath = path.join(dirPath, file.name);
-      if (file.isDirectory()) {
-        endFlag +=1;
-        addFileToZip(archive, filePath, path.join(root, file.name));
-      } else {
-        if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif|ico]+$/.test(file.name)) {
-          const buf = fs.createReadStream(filePath);
-          archive.append(buf, {
-            name: path.join(root, file.name)
-          });
-        }
-      }
-    });
-    // pipe archive data to the file
-    console.log('close:', endFlag);
-    (endFlag === 0) && archive.finalize();
-  });
-}
+const sendData = __webpack_require__(296);
+const addFileToZip = __webpack_require__(987);
 
 try {
   // `who-to-greet` input defined in action metadata file
@@ -4520,6 +4474,7 @@ try {
 } catch (error) {
   core.setFailed(error.message);
 }
+
 
 /***/ }),
 /* 105 */,
@@ -5909,7 +5864,7 @@ function runJob(iterator, key, item, callback)
 /* 158 */
 /***/ (function(module) {
 
-module.exports = {"_from":"tough-cookie@~2.4.3","_id":"tough-cookie@2.4.3","_inBundle":false,"_integrity":"sha512-Q5srk/4vDM54WJsJio3XNn6K2sCG+CQ8G5Wz6bZhRZoAe/+TxjWB/GlFAnYEbkYVlON9FMk/fE3h2RLpPXo4lQ==","_location":"/tough-cookie","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"tough-cookie@~2.4.3","name":"tough-cookie","escapedName":"tough-cookie","rawSpec":"~2.4.3","saveSpec":null,"fetchSpec":"~2.4.3"},"_requiredBy":["/request"],"_resolved":"https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz","_shasum":"53f36da3f47783b0925afa06ff9f3b165280f781","_spec":"tough-cookie@~2.4.3","_where":"/Users/apple/Documents/project/deploy-static-action/node_modules/request","author":{"name":"Jeremy Stashewsky","email":"jstash@gmail.com"},"bugs":{"url":"https://github.com/salesforce/tough-cookie/issues"},"bundleDependencies":false,"contributors":[{"name":"Alexander Savin"},{"name":"Ian Livingstone"},{"name":"Ivan Nikulin"},{"name":"Lalit Kapoor"},{"name":"Sam Thompson"},{"name":"Sebastian Mayr"}],"dependencies":{"psl":"^1.1.24","punycode":"^1.4.1"},"deprecated":false,"description":"RFC6265 Cookies and Cookie Jar for node.js","devDependencies":{"async":"^1.4.2","nyc":"^11.6.0","string.prototype.repeat":"^0.2.0","vows":"^0.8.1"},"engines":{"node":">=0.8"},"files":["lib"],"homepage":"https://github.com/salesforce/tough-cookie","keywords":["HTTP","cookie","cookies","set-cookie","cookiejar","jar","RFC6265","RFC2965"],"license":"BSD-3-Clause","main":"./lib/cookie","name":"tough-cookie","repository":{"type":"git","url":"git://github.com/salesforce/tough-cookie.git"},"scripts":{"cover":"nyc --reporter=lcov --reporter=html vows test/*_test.js","test":"vows test/*_test.js"},"version":"2.4.3"};
+module.exports = {"_args":[["tough-cookie@2.4.3","/Users/tang/Documents/private/deploy-static-action"]],"_from":"tough-cookie@2.4.3","_id":"tough-cookie@2.4.3","_inBundle":false,"_integrity":"sha512-Q5srk/4vDM54WJsJio3XNn6K2sCG+CQ8G5Wz6bZhRZoAe/+TxjWB/GlFAnYEbkYVlON9FMk/fE3h2RLpPXo4lQ==","_location":"/tough-cookie","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"tough-cookie@2.4.3","name":"tough-cookie","escapedName":"tough-cookie","rawSpec":"2.4.3","saveSpec":null,"fetchSpec":"2.4.3"},"_requiredBy":["/request"],"_resolved":"https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.4.3.tgz","_spec":"2.4.3","_where":"/Users/tang/Documents/private/deploy-static-action","author":{"name":"Jeremy Stashewsky","email":"jstash@gmail.com"},"bugs":{"url":"https://github.com/salesforce/tough-cookie/issues"},"contributors":[{"name":"Alexander Savin"},{"name":"Ian Livingstone"},{"name":"Ivan Nikulin"},{"name":"Lalit Kapoor"},{"name":"Sam Thompson"},{"name":"Sebastian Mayr"}],"dependencies":{"psl":"^1.1.24","punycode":"^1.4.1"},"description":"RFC6265 Cookies and Cookie Jar for node.js","devDependencies":{"async":"^1.4.2","nyc":"^11.6.0","string.prototype.repeat":"^0.2.0","vows":"^0.8.1"},"engines":{"node":">=0.8"},"files":["lib"],"homepage":"https://github.com/salesforce/tough-cookie","keywords":["HTTP","cookie","cookies","set-cookie","cookiejar","jar","RFC6265","RFC2965"],"license":"BSD-3-Clause","main":"./lib/cookie","name":"tough-cookie","repository":{"type":"git","url":"git://github.com/salesforce/tough-cookie.git"},"scripts":{"cover":"nyc --reporter=lcov --reporter=html vows test/*_test.js","test":"vows test/*_test.js"},"version":"2.4.3"};
 
 /***/ }),
 /* 159 */,
@@ -24663,7 +24618,24 @@ module.exports = require("buffer");
 /***/ }),
 /* 294 */,
 /* 295 */,
-/* 296 */,
+/* 296 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+const request = __webpack_require__(830);
+
+module.exports = function sendData(url, formData) {
+  request.post({ url, formData }, (error, response = {}, body) => {
+    console.log('mesage', body);
+    if (!error && response.statusCode < 300) {
+      console.log('send file successfully');
+      return;
+    }
+    console.error('send file failed');
+  });
+};
+
+
+/***/ }),
 /* 297 */,
 /* 298 */,
 /* 299 */
@@ -61653,7 +61625,44 @@ function DoublyLinkedNode(key, val) {
 
 /***/ }),
 /* 986 */,
-/* 987 */,
+/* 987 */
+/***/ (function(module, __unusedexports, __webpack_require__) {
+
+
+const fs = __webpack_require__(747);
+const path = __webpack_require__(622);
+
+let endFlag = 1; // 遍历完成标志
+
+module.exports = function addFileToZip(archive, dirPath, root = '') {
+  fs.readdir(dirPath, {
+    withFileTypes: true
+  }, (err, files) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    endFlag -= 1; // 遍历一次目录减1
+    files.forEach((file) => {
+      const filePath = path.join(dirPath, file.name);
+      if (file.isDirectory()) {
+        endFlag += 1;
+        addFileToZip(archive, filePath, path.join(root, file.name));
+      } else if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif|ico]+$/.test(file.name)) {
+        const buf = fs.createReadStream(filePath);
+        archive.append(buf, {
+          name: path.join(root, file.name)
+        });
+      }
+    });
+    // pipe archive data to the file
+    // console.log('close:', endFlag);
+    (endFlag === 0) && archive.finalize();
+  });
+};
+
+
+/***/ }),
 /* 988 */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 

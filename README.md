@@ -6,6 +6,13 @@
  - target：静态资源的目标文件夹名， 默认是dist
  - requestUrl：一个部署API
 
- ##  
+ ## 说明
  当前会对文件属性进行过滤，特殊格式的还不支持；
  >[txt|js|css|md|html|jpg|png|jpeg|gif|ico]
+
+ ## 备注
+ testDir 是用于用例测试的文件，与项目代码实现无关
+
+ ## 操作
+ npm run pub // 打包代码  
+ npm run test // 用例测试

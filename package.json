@@ -21,6 +21,8 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.20.5"
+    "@doddle/eslint-config-doddle": "0.0.13",
+    "@zeit/ncc": "^0.20.5",
+    "jest": "^24.9.0"
   }
 }

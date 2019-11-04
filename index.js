@@ -1,63 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
-const request = require('request');
 const core = require('@actions/core');
-
-// const core = {
-//   getInput() {
-
-//   },
-//   setsetFailed(msg) {
-//     console.log('message:', msg);
-//   }
-// };
-
-function sendData(url, formData) {
-  request.post({ url, formData }, function (error, response = {}, body) {  
-    console.log('mesage', body);
-    if (!error && response.statusCode < 300) {
-      console.log('send file successfully');
-      return;
-    }
-    console.error('send file failed');
-  });
-}
-
-let endFlag = 1; // 遍历完成标志
-
-function addFileToZip(archive, dirPath, root = '') {
-  fs.readdir(dirPath, {
-    withFileTypes: true
-  }, (err, files) => {
-    endFlag -= 1; // 遍历一次目录减1
-    files.forEach(file => {
-      const filePath = path.join(dirPath, file.name);
-      if (file.isDirectory()) {
-        endFlag +=1;
-        addFileToZip(archive, filePath, path.join(root, file.name));
-      } else {
-        if (/.+\.[txt|js|css|md|html|jpg|png|jpeg|gif|ico]+$/.test(file.name)) {
-          const buf = fs.createReadStream(filePath);
-          archive.append(buf, {
-            name: path.join(root, file.name)
-          });
-        }
-      }
-    });
-    // pipe archive data to the file
-    console.log('close:', endFlag);
-    (endFlag === 0) && archive.finalize();
-  });
-}
+const sendData = require('./src/send');
+const addFileToZip = require('./src/compose');
 
 try {
   // `who-to-greet` input defined in action metadata file
   const name = core.getInput('name'); //  || 'dom'
   const token = core.getInput('token'); //  || 'dom'
   const requestUrl = core.getInput('requestUrl');
-  const dist = core.getInput('dist') || 'dist'; 
-  const target = core.getInput('target') || 'dist'; 
+  const dist = core.getInput('dist') || 'dist';
+  const target = core.getInput('target') || 'dist';
 
   if (!name || !token) {
     console.error('name and token is nessary');
