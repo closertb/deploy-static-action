@@ -5201,10 +5201,10 @@ const addFileToZip = __webpack_require__(987);
 
       const messsage = await getCommitMessage(commitSHA);
 
-
-      console.log('com:', messsage);
-
       console.log('cmd:', cmd, targetPath);
+
+      console.log('com:', messsage.includes('feat:'), messsage.includes('fix:'));
+
       return;
     }
 
