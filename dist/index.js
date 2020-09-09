@@ -5176,7 +5176,7 @@ const archiver = __webpack_require__(248);
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const getCommitMessage = __webpack_require__(748);
-const sendData = __webpack_require__(296);
+const { sendData, sendFile } = __webpack_require__(296);
 const addFileToZip = __webpack_require__(987);
 
 (async () => {
@@ -5184,7 +5184,6 @@ const addFileToZip = __webpack_require__(987);
     const type = core.getInput('type') || 'static'; //  || 'dom'
     const name = core.getInput('name'); //  || 'dom'
     const token = core.getInput('token'); //  || 'dom'
-    const cmd = core.getInput('cmd'); //  || 'dom'
     const targetPath = core.getInput('targetPath'); //  || 'dom'
     const requestUrl = core.getInput('requestUrl');
     const dist = core.getInput('dist') || 'dist';
@@ -5194,17 +5193,22 @@ const addFileToZip = __webpack_require__(987);
       console.error('name and token is nessary');
       return;
     }
-    console.log('type:', type);
 
     if (type === 'server') {
       const commitSHA = github.context.sha;
 
       const messsage = await getCommitMessage(commitSHA);
 
-      console.log('cmd:', cmd, targetPath);
+      let cmd = 'npm run dev';
 
-      console.log('com:', messsage.includes('feat:'), messsage.includes('fix:'));
+      if (messsage.includes('fix:')) {
+        cmd = 'npm run dev:fix';
+      }
 
+      sendData(requestUrl, {
+        cmd,
+        targetPath
+      });
       return;
     }
 
@@ -5222,7 +5226,7 @@ const addFileToZip = __webpack_require__(987);
     out.on('close', () => {
       formData.file = fs.createReadStream(zipPath);
       console.log('start send zip files');
-      sendData(requestUrl, formData);
+      sendFile(requestUrl, formData);
     });
     archive.pipe(out);
     // add file to zip
@@ -28618,15 +28622,27 @@ function parseOptions(options, log, hook) {
 
 const request = __webpack_require__(830);
 
-module.exports = function sendData(url, formData) {
-  request.post({ url, formData }, (error, response = {}, body) => {
-    console.log('mesage', body);
-    if (!error && response.statusCode < 300) {
-      console.log('send file successfully');
-      return;
-    }
-    console.error('send file failed');
-  });
+module.exports = {
+  sendFile(url, formData) {
+    return request.post({ url, formData }, (error, response = {}, body) => {
+      console.log('mesage', body);
+      if (!error && response.statusCode < 300) {
+        console.log('send file successfully');
+        return;
+      }
+      console.error('send file failed');
+    });
+  },
+  sendData(url, form) {
+    return request.post({ url, form }, (error, response = {}, body) => {
+      console.log('mesage', body);
+      if (!error && response.statusCode < 300) {
+        console.log('send file successfully');
+        return;
+      }
+      console.error('send file failed');
+    });
+  }
 };
 
 

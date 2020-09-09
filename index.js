@@ -4,7 +4,7 @@ const archiver = require('archiver');
 const core = require('@actions/core');
 const github = require('@actions/github');
 const getCommitMessage = require('./src/commit');
-const sendData = require('./src/send');
+const { sendData, sendFile } = require('./src/send');
 const addFileToZip = require('./src/compose');
 
 (async () => {
@@ -12,7 +12,6 @@ const addFileToZip = require('./src/compose');
     const type = core.getInput('type') || 'static'; //  || 'dom'
     const name = core.getInput('name'); //  || 'dom'
     const token = core.getInput('token'); //  || 'dom'
-    const cmd = core.getInput('cmd'); //  || 'dom'
     const targetPath = core.getInput('targetPath'); //  || 'dom'
     const requestUrl = core.getInput('requestUrl');
     const dist = core.getInput('dist') || 'dist';
@@ -22,17 +21,22 @@ const addFileToZip = require('./src/compose');
       console.error('name and token is nessary');
       return;
     }
-    console.log('type:', type);
 
     if (type === 'server') {
       const commitSHA = github.context.sha;
 
       const messsage = await getCommitMessage(commitSHA);
 
-      console.log('cmd:', cmd, targetPath);
+      let cmd = 'npm run dev';
 
-      console.log('com:', messsage.includes('feat:'), messsage.includes('fix:'));
+      if (messsage.includes('fix:')) {
+        cmd = 'npm run dev:fix';
+      }
 
+      sendData(requestUrl, {
+        cmd,
+        targetPath
+      });
       return;
     }
 
@@ -50,7 +54,7 @@ const addFileToZip = require('./src/compose');
     out.on('close', () => {
       formData.file = fs.createReadStream(zipPath);
       console.log('start send zip files');
-      sendData(requestUrl, formData);
+      sendFile(requestUrl, formData);
     });
     archive.pipe(out);
     // add file to zip
