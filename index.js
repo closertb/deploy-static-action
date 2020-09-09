@@ -22,14 +22,15 @@ const addFileToZip = require('./src/compose');
     if (type === 'server') {
       const commitSHA = github.context.sha;
 
-      console.log('commit', commitSHA);
       const messsage = await getCommitMessage(commitSHA);
 
 
       const cmd = core.getInput('cmd'); //  || 'dom'
       const targetPath = core.getInput('targetPath'); //  || 'dom'
 
-      console.log('commit', messsage, cmd, targetPath);
+      console.log('commit:', messsage);
+
+      console.log('cmd:', cmd, targetPath);
       return;
     }
     const requestUrl = core.getInput('requestUrl');
