@@ -5184,6 +5184,11 @@ const addFileToZip = __webpack_require__(987);
     const type = core.getInput('type') || 'static'; //  || 'dom'
     const name = core.getInput('name'); //  || 'dom'
     const token = core.getInput('token'); //  || 'dom'
+    const cmd = core.getInput('cmd'); //  || 'dom'
+    const targetPath = core.getInput('targetPath'); //  || 'dom'
+    const requestUrl = core.getInput('requestUrl');
+    const dist = core.getInput('dist') || 'dist';
+    const target = core.getInput('target') || 'dist';
 
     if (!name || !token) {
       console.error('name and token is nessary');
@@ -5197,17 +5202,11 @@ const addFileToZip = __webpack_require__(987);
       const messsage = await getCommitMessage(commitSHA);
 
 
-      const cmd = core.getInput('cmd'); //  || 'dom'
-      const targetPath = core.getInput('targetPath'); //  || 'dom'
-
-      console.log('commit:', messsage);
+      console.log('com:', messsage);
 
       console.log('cmd:', cmd, targetPath);
       return;
     }
-    const requestUrl = core.getInput('requestUrl');
-    const dist = core.getInput('dist') || 'dist';
-    const target = core.getInput('target') || 'dist';
 
     const formData = {
       name,
