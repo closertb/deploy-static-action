@@ -5199,10 +5199,10 @@ const addFileToZip = __webpack_require__(987);
 
       const messsage = await getCommitMessage(commitSHA);
 
-      let cmd = 'npm run dev';
+      let cmd = 'npm run update';
 
       if (messsage.includes('fix:')) {
-        cmd = 'npm run dev:fix';
+        cmd = 'npm run update:fix';
       }
 
       sendData(requestUrl, {

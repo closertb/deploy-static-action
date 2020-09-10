@@ -27,10 +27,10 @@ const addFileToZip = require('./src/compose');
 
       const messsage = await getCommitMessage(commitSHA);
 
-      let cmd = 'npm run dev';
+      let cmd = 'npm run update';
 
       if (messsage.includes('fix:')) {
-        cmd = 'npm run dev:fix';
+        cmd = 'npm run update:fix';
       }
 
       sendData(requestUrl, {
