@@ -17,7 +17,8 @@ pids
 *.pid
 *.seed
 *.pid.lock
-
+testDir/*
+dist/*
 # nyc test coverage
 .nyc_output
 

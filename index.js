@@ -12,7 +12,6 @@ const addFileToZip = require('./src/compose');
     const type = core.getInput('type') || 'static'; //  || 'dom'
     const name = core.getInput('name'); //  || 'dom'
     const token = core.getInput('token'); //  || 'dom'
-    const targetPath = core.getInput('targetPath'); //  || 'dom'
     const requestUrl = core.getInput('requestUrl');
     const dist = core.getInput('dist') || 'dist';
     const target = core.getInput('target') || 'dist';
@@ -22,25 +21,8 @@ const addFileToZip = require('./src/compose');
       return;
     }
 
-    if (type === 'server') {
-      const commitSHA = github.context.sha;
-
-      const messsage = await getCommitMessage(commitSHA);
-
-      let cmd = 'npm run update';
-
-      if (messsage.includes('fix:')) {
-        cmd = 'npm run update:fix';
-      }
-
-      sendData(requestUrl, {
-        cmd,
-        targetPath
-      });
-      return;
-    }
-
     const formData = {
+      type,
       name,
       token,
       target,
@@ -52,13 +34,38 @@ const addFileToZip = require('./src/compose');
     const zipPath = path.join(dist, `/${target}.zip`);
     const out = fs.createWriteStream(zipPath);
     out.on('close', () => {
+      console.log('start send zip files, params:', JSON.stringify(formData));
       formData.file = fs.createReadStream(zipPath);
-      console.log('start send zip files');
       sendFile(requestUrl, formData);
     });
     archive.pipe(out);
+    if (type === 'server') {
+      const commitSHA = github.context.sha;
+
+      const messsage = await getCommitMessage(commitSHA);
+
+      let cmd = 'npm run update';
+
+      // commit 信息以fix:开头，表示需要安装包
+      if (messsage.startsWith('fix:')) {
+        cmd = 'npm run update:fix';
+      }
+
+      formData.cmd = cmd;
+      addFileToZip(archive, {
+        dirPath: 'package.json',
+        finalize: false,
+      });
+      addFileToZip(archive, {
+        dirPath: 'pm2.json',
+        finalize: false,
+      });
+    }
     // add file to zip
-    addFileToZip(archive, dist);
+    addFileToZip(archive, {
+      dirPath: dist,
+      finalize: true,
+    });
   } catch (error) {
     core.setFailed(error.message);
   }
