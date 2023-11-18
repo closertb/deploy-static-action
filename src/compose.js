@@ -4,27 +4,27 @@ const path = require('path');
 
 const isLegalFileType = (path) => /.+\.(txt|js|css|md|html|jpg|png|jpeg|gif|ico|json|less|webp|map)+$/.test(path);
 
+let endFlag = 1;
+
 module.exports = function addFileToZip(archive, params) {
   // dirPath 可能是文件夹名 也可能是文件名
-  const { dirPath, root = '', home = '', ...others } = params;
-  // 赋默认值
-  if (others.endFlag === undefined) {
-    others.endFlag = 1;
-  }
+  const { dirPath, root = '', home = '', loop, finalize } = params;
 
-  // 赋默认值
-  if (others.finalize === undefined) {
-    others.finalize = false;
-  }
   // 如果是文件类型
   if (isLegalFileType(dirPath)) {
     const buf = fs.createReadStream(path.join(home, dirPath));
     archive.append(buf, {
       name: path.join(root, dirPath)
     });
-    others.finalize && (others.endFlag === 0) && archive.finalize();
+    finalize && archive.finalize();
     return;
   }
+
+  // 赋默认值
+  if (!loop) {
+    endFlag = 1;
+  }
+
   fs.readdir(path.join(home, dirPath), {
     withFileTypes: true
   }, (err, files) => {
@@ -32,15 +32,17 @@ module.exports = function addFileToZip(archive, params) {
       console.error(err);
       return;
     }
-    others.endFlag = others.endFlag - 1; // 遍历一次目录减1
+    endFlag = endFlag - 1; // 遍历一次目录减1
     files.forEach((file) => {
       const filePath = path.join(home, dirPath, file.name);
       if (file.isDirectory()) {
-        others.endFlag = others.endFlag + 1;
-        addFileToZip(archive, Object.assign(others, {
+        endFlag = endFlag + 1;
+        addFileToZip(archive, {
           dirPath: filePath,
           root: path.join(root, file.name),
-        }));
+          finalize,
+          loop: true,
+        });
       } else if (isLegalFileType(file.name)) {
         const buf = fs.createReadStream(filePath);
         archive.append(buf, {
@@ -49,7 +51,7 @@ module.exports = function addFileToZip(archive, params) {
       }
     });
     // pipe archive data to the file
-    // console.log('close:', endFlag);
-    others.finalize && (others.endFlag === 0) && archive.finalize();
+    console.log('close:', endFlag);
+    finalize && (endFlag === 0) && archive.finalize();
   });
 };

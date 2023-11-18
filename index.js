@@ -39,6 +39,7 @@ const addFileToZip = require('./src/compose');
       sendFile(requestUrl, formData);
     });
     archive.pipe(out);
+    let home = '';
     if (type === 'server') {
       const commitSHA = github.context.sha;
 
@@ -60,9 +61,11 @@ const addFileToZip = require('./src/compose');
         dirPath: 'pm2.json',
         finalize: false,
       });
+      home = 'build';
     }
     // add file to zip
     addFileToZip(archive, {
+      home,
       dirPath: dist,
       finalize: true,
     });

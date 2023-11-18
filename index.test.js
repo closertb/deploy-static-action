@@ -5,7 +5,7 @@ const addFileToZip = require('./src/compose');
 
 const target = 'zipFileName';
 const home = path.join(__dirname, '/testDir');
-const dist = 'chart';
+const dist = 'target';
 const pk = 'package.json';
 
 const composeZip = target => new Promise((resolve, reject) => {
@@ -26,6 +26,7 @@ const composeZip = target => new Promise((resolve, reject) => {
       finalize: false,
     });
     addFileToZip(archive, {
+      root: 'build',
       home,
       dirPath: dist,
       finalize: true,
