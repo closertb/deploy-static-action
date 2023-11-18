@@ -39,7 +39,7 @@ const addFileToZip = require('./src/compose');
       sendFile(requestUrl, formData);
     });
     archive.pipe(out);
-    let home = '';
+    let root = '';
     if (type === 'server') {
       // 命令行执行的位置
       const targetPath = core.getInput('targetPath') || './';
@@ -64,11 +64,11 @@ const addFileToZip = require('./src/compose');
         dirPath: 'pm2.json',
         finalize: false,
       });
-      home = 'build';
+      root = 'build';
     }
     // add file to zip
     addFileToZip(archive, {
-      home,
+      root,
       dirPath: dist,
       finalize: true,
     });

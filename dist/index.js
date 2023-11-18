@@ -5211,7 +5211,7 @@ const addFileToZip = __webpack_require__(987);
       sendFile(requestUrl, formData);
     });
     archive.pipe(out);
-    let home = '';
+    let root = '';
     if (type === 'server') {
       // 命令行执行的位置
       const targetPath = core.getInput('targetPath') || './';
@@ -5236,11 +5236,11 @@ const addFileToZip = __webpack_require__(987);
         dirPath: 'pm2.json',
         finalize: false,
       });
-      home = 'build';
+      root = 'build';
     }
     // add file to zip
     addFileToZip(archive, {
-      home,
+      root,
       dirPath: dist,
       finalize: true,
     });
@@ -73194,7 +73194,7 @@ exports.exec = exec;
 const fs = __webpack_require__(747);
 const path = __webpack_require__(622);
 
-const isLegalFileType = (path) => /.+\.(txt|js|css|md|html|jpg|png|jpeg|gif|ico|json|less|webp|map)+$/.test(path);
+const isLegalFileType = path => /.+\.(txt|js|css|md|html|jpg|png|jpeg|gif|ico|json|less|webp|map)+$/.test(path);
 
 let endFlag = 1;
 
@@ -73224,11 +73224,11 @@ module.exports = function addFileToZip(archive, params) {
       console.error(err);
       return;
     }
-    endFlag = endFlag - 1; // 遍历一次目录减1
+    endFlag -= 1; // 遍历一次目录减1
     files.forEach((file) => {
       const filePath = path.join(home, dirPath, file.name);
       if (file.isDirectory()) {
-        endFlag = endFlag + 1;
+        endFlag += 1;
         addFileToZip(archive, {
           dirPath: filePath,
           root: path.join(root, file.name),
@@ -73243,7 +73243,7 @@ module.exports = function addFileToZip(archive, params) {
       }
     });
     // pipe archive data to the file
-    console.log('close:', endFlag);
+    // console.log('close:', endFlag);
     finalize && (endFlag === 0) && archive.finalize();
   });
 };
