@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const isLegalFileType = (path) => /.+\.(txt|js|css|md|html|jpg|png|jpeg|gif|ico|json|less|webp|map)+$/.test(path);
+const isLegalFileType = path => /.+\.(txt|js|css|md|html|jpg|png|jpeg|gif|ico|json|less|webp|map)+$/.test(path);
 
 let endFlag = 1;
 
@@ -32,11 +32,11 @@ module.exports = function addFileToZip(archive, params) {
       console.error(err);
       return;
     }
-    endFlag = endFlag - 1; // 遍历一次目录减1
+    endFlag -= 1; // 遍历一次目录减1
     files.forEach((file) => {
       const filePath = path.join(home, dirPath, file.name);
       if (file.isDirectory()) {
-        endFlag = endFlag + 1;
+        endFlag += 1;
         addFileToZip(archive, {
           dirPath: filePath,
           root: path.join(root, file.name),
@@ -51,7 +51,7 @@ module.exports = function addFileToZip(archive, params) {
       }
     });
     // pipe archive data to the file
-    console.log('close:', endFlag);
+    // console.log('close:', endFlag);
     finalize && (endFlag === 0) && archive.finalize();
   });
 };

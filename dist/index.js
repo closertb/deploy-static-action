@@ -5213,6 +5213,8 @@ const addFileToZip = __webpack_require__(987);
     archive.pipe(out);
     let home = '';
     if (type === 'server') {
+      // 命令行执行的位置
+      const targetPath = core.getInput('targetPath') || './';
       const commitSHA = github.context.sha;
 
       const messsage = await getCommitMessage(commitSHA);
@@ -5225,6 +5227,7 @@ const addFileToZip = __webpack_require__(987);
       }
 
       formData.cmd = cmd;
+      formData.targetPath = targetPath;
       addFileToZip(archive, {
         dirPath: 'package.json',
         finalize: false,

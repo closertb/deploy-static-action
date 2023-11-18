@@ -41,6 +41,8 @@ const addFileToZip = require('./src/compose');
     archive.pipe(out);
     let home = '';
     if (type === 'server') {
+      // 命令行执行的位置
+      const targetPath = core.getInput('targetPath') || './';
       const commitSHA = github.context.sha;
 
       const messsage = await getCommitMessage(commitSHA);
@@ -53,6 +55,7 @@ const addFileToZip = require('./src/compose');
       }
 
       formData.cmd = cmd;
+      formData.targetPath = targetPath;
       addFileToZip(archive, {
         dirPath: 'package.json',
         finalize: false,
