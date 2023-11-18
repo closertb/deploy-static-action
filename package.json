@@ -1,6 +1,6 @@
 {
   "name": "deploy-static-action",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "deploy-static-action",
   "main": "index.js",
   "scripts": {
