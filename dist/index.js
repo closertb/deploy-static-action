@@ -73236,6 +73236,7 @@ module.exports = function addFileToZip(archive, params) {
           loop: true,
         });
       } else if (isLegalFileType(file.name)) {
+        console.log('filtPath:', filePath);
         const buf = fs.createReadStream(filePath);
         archive.append(buf, {
           name: path.join(root, file.name)
